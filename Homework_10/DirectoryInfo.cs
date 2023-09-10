@@ -12,10 +12,10 @@ namespace Homework_10
         
         public void DirectoryInfo()
         {
-            string dir1 = "C:\\Otus\\TestDir1";
-            string dir2 = "C:\\Otus\\TestDir2";
-            DirectoryInfo directoryInfo1 = new DirectoryInfo(dir1);
-            DirectoryInfo directoryInfo2 = new DirectoryInfo(dir2);
+            var dir1 = "C:\\Otus\\TestDir1";
+            var dir2 = "C:\\Otus\\TestDir2";
+            var directoryInfo1 = new DirectoryInfo(dir1);
+            var directoryInfo2 = new DirectoryInfo(dir2);
 
             try
             {
@@ -38,19 +38,34 @@ namespace Homework_10
                 {
                     for (int i = 1; i <= 10; i++)
                     {
-                        string path = @"C:\Otus\TestDir" + j + @"\File" + i + ".txt";
-                        using (StreamWriter sw = new StreamWriter(path, true, Encoding.Unicode))
+                        var path = @"C:\Otus\TestDir" + j + @"\File" + i + ".txt";
+                        if (!File.Exists(path))
                         {
-                            sw.WriteLine(DateTime.Now);
-                            sw.Close();
+                            try {
+                                using (StreamWriter sw = new StreamWriter(path, true, Encoding.Unicode))
+                                {
+                                    sw.WriteLine(DateTime.Now);
+                                    sw.WriteLine(Path.GetFileName(path));
+                                    sw.Close();
+                                }
+                            } 
+                            catch (Exception e)  
+                            {
+                                Console.WriteLine("The file does not have write access: {0}", e.ToString());
+                            }
+                            
+                            using (StreamReader sr = new StreamReader(path))
+                            {
+                                string text = sr.ReadLine();
+                                Console.WriteLine("\n");
+                                Console.WriteLine(text + " . File name - " + Path.GetFileName(path));
+                            }
                         }
-
-                        using (StreamReader sr = new StreamReader(path, true))
+                        else
                         {
-                            string text = sr.ReadLine();
-                            Console.WriteLine("\n");
-                            Console.WriteLine(text + " . Имя файла - " + path.Substring(17));
+                            Console.WriteLine("File does not exist.");
                         }
+                       
                     }
                 }
 
